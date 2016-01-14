@@ -1,0 +1,74 @@
+﻿@using RaspBerryWebAppPro.Models
+@model RaspBerryWebAppPro.Models.Device
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Device</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SerialNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SerialNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    <div>
+        Following relays are found in system
+    </div>
+    <p>
+        <table class="table">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Index
+                </th>
+
+                <th></th>
+            </tr>
+
+            @foreach (Relay relay in Model.Relays)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => relay.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => relay.Index)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Relays", new { id = relay.Id }, null)
+                        @Html.ActionLink("Details", "Details", "Relays", new { id = relay.Id }, null)
+                        @Html.ActionLink("Delete", "Delete", "Relays", new { id = relay.Id }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </p>
+</div>
+@*@if (Model.Relays != null && Model.Relays.Count() < Model.Device.RelayCount)
+    {*@
+
+@Html.ActionLink("+ Relay", "Create", "Relays", new { id = Model.Id }, null)
+
+@*}*@
+<p>
+    @Html.ActionLink("Edit Device", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back All Devices", "Index")
+</p>

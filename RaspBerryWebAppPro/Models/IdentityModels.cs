@@ -29,5 +29,10 @@ namespace RaspBerryWebAppPro.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Device> Devices { get; set; }
+        public DbSet<Relay> Relays { get; set; }
+        public DbSet<RelayEvent> RelayEvents { get; set; }
+
     }
 }
