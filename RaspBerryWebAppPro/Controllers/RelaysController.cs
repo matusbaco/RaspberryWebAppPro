@@ -14,13 +14,6 @@ namespace RaspBerryWebAppPro.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Relays
-        public ActionResult Index()
-        {
-            var relays = db.Relays.Include(r => r.Device);
-            return View(relays.ToList());
-        }
-
         // GET: Relays/Details/5
         public ActionResult Details(Guid? id)
         {
@@ -33,14 +26,20 @@ namespace RaspBerryWebAppPro.Controllers
             {
                 return HttpNotFound();
             }
+      
+            var relayEvents = db.RelayEvents.Where(x => x.RelayId == id.Value).ToList<RelayEvent>();
+            relay.RelayEvents = relayEvents;
             return View(relay);
         }
 
         // GET: Relays/Create
-        public ActionResult Create()
+        public ActionResult Create(Guid id)
         {
-            ViewBag.DeviceId = new SelectList(db.Devices, "Id", "Name");
-            return View();
+            ViewData["deviceparentid"] = id;
+            Relay relay = new Relay();
+            relay.Id = Guid.NewGuid();
+            relay.DeviceId = id;
+            return View(relay);
         }
 
         // POST: Relays/Create
@@ -48,18 +47,34 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,DeviceId,Index,Name")] Relay relay)
+        public ActionResult Create([Bind(Include = "ID,Name,DeviceId")] Relay relay)
         {
             if (ModelState.IsValid)
             {
                 relay.Id = Guid.NewGuid();
+                relay.Index = GetFreeIndex(relay);
                 db.Relays.Add(relay);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Devices", new { id = relay.DeviceId });
             }
 
-            ViewBag.DeviceId = new SelectList(db.Devices, "Id", "Name", relay.DeviceId);
             return View(relay);
+        }
+
+        private int GetFreeIndex(Relay relay)
+        {
+            var relays = db.Relays.Where(x => x.DeviceId == relay.DeviceId).ToList<Relay>();
+
+            for (int i = 0; i <= relays.Count(); i++)
+            {
+                if (!relays.Where(x => x.Index != i).Any())
+                {
+                    return i;
+                }
+
+            }
+
+            return relays.Count();
         }
 
         // GET: Relays/Edit/5
@@ -74,7 +89,6 @@ namespace RaspBerryWebAppPro.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DeviceId = new SelectList(db.Devices, "Id", "Name", relay.DeviceId);
             return View(relay);
         }
 
@@ -83,15 +97,14 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,DeviceId,Index,Name")] Relay relay)
+        public ActionResult Edit([Bind(Include = "ID,Index,Name,DeviceID")] Relay relay)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(relay).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Devices", new { id = relay.DeviceId });
             }
-            ViewBag.DeviceId = new SelectList(db.Devices, "Id", "Name", relay.DeviceId);
             return View(relay);
         }
 
@@ -118,7 +131,7 @@ namespace RaspBerryWebAppPro.Controllers
             Relay relay = db.Relays.Find(id);
             db.Relays.Remove(relay);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Devices", new { id = relay.DeviceId });
         }
 
         protected override void Dispose(bool disposing)

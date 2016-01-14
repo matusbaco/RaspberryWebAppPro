@@ -15,10 +15,10 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.devicenumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.devicenumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.devicenumber, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SerialNumber, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -30,15 +30,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsSuccess, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsSuccess)
-                    @Html.ValidationMessageFor(model => model.IsSuccess, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
+       
 
         @*<div class="form-group">
                 @Html.LabelFor(model => model.RelayCount, htmlAttributes: new { @class = "control-label col-md-2" })

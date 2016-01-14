@@ -32,6 +32,9 @@ namespace RaspBerryWebAppPro.Controllers
             {
                 return HttpNotFound();
             }
+        
+            var relays = db.Relays.Where(x => x.DeviceId == id.Value).ToList<Relay>();
+            device.Relays = relays;
             return View(device);
         }
 
@@ -46,7 +49,7 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,UserId,SerialNumber,Name")] Device device)
+        public ActionResult Create([Bind(Include = "ID,devicenumber,Name,IsSuccess")] Device device)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +82,7 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,UserId,SerialNumber,Name")] Device device)
+        public ActionResult Edit([Bind(Include = "ID,devicenumber,Name,IsSuccess")] Device device)
         {
             if (ModelState.IsValid)
             {

@@ -14,12 +14,6 @@ namespace RaspBerryWebAppPro.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: RelayEvents
-        public ActionResult Index()
-        {
-            var relayEvents = db.RelayEvents.Include(r => r.Relay);
-            return View(relayEvents.ToList());
-        }
 
         // GET: RelayEvents/Details/5
         public ActionResult Details(Guid? id)
@@ -37,10 +31,15 @@ namespace RaspBerryWebAppPro.Controllers
         }
 
         // GET: RelayEvents/Create
-        public ActionResult Create()
+        public ActionResult Create(Guid id)
         {
-            ViewBag.RelayId = new SelectList(db.Relays, "Id", "Name");
-            return View();
+            ViewData["relayparentid"] = id;
+            RelayEvent eventToCreate = new RelayEvent();
+            eventToCreate.RelayId = id;
+            eventToCreate.StartTime = DateTime.Now;
+            eventToCreate.DurationInMinutes = 15;
+            eventToCreate.EndTime = eventToCreate.StartTime.AddMinutes(15);
+            return View(eventToCreate);
         }
 
         // POST: RelayEvents/Create
@@ -53,12 +52,14 @@ namespace RaspBerryWebAppPro.Controllers
             if (ModelState.IsValid)
             {
                 relayEvent.Id = Guid.NewGuid();
+
                 db.RelayEvents.Add(relayEvent);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", "Relays", new { id = relayEvent.RelayId });
+
             }
 
-            ViewBag.RelayId = new SelectList(db.Relays, "Id", "Name", relayEvent.RelayId);
             return View(relayEvent);
         }
 
@@ -74,7 +75,6 @@ namespace RaspBerryWebAppPro.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RelayId = new SelectList(db.Relays, "Id", "Name", relayEvent.RelayId);
             return View(relayEvent);
         }
 
@@ -83,15 +83,17 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,RelayId,StartTime,EndTime,DurationInMinutes")] RelayEvent relayEvent)
+        public ActionResult Edit([Bind(Include = "ID,RelayID,start,end,duration,DurationType")] RelayEvent relayEvent)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(relayEvent).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", "Relays", new { id = relayEvent.RelayId });
+
+
             }
-            ViewBag.RelayId = new SelectList(db.Relays, "Id", "Name", relayEvent.RelayId);
             return View(relayEvent);
         }
 
@@ -118,7 +120,7 @@ namespace RaspBerryWebAppPro.Controllers
             RelayEvent relayEvent = db.RelayEvents.Find(id);
             db.RelayEvents.Remove(relayEvent);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Relays", new { id = relayEvent.RelayId });
         }
 
         protected override void Dispose(bool disposing)

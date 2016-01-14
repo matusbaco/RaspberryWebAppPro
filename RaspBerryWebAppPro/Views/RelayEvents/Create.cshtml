@@ -17,41 +17,48 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+
         <div class="form-group">
             @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                <div class='input-group date' id='datetimepicker1' style="max-width:250px">
+                    @Html.TextBoxFor(m => m.StartTime, new { @class = "form-control", @id = "eventstart" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", @readonly = "readonly", @id = "eventend" })
+
                 @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        @*<input name="end" type="datetime" readonly="readonly"/>*@
         <div class="form-group">
             @Html.LabelFor(model => model.DurationInMinutes, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DurationInMinutes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.DurationInMinutes, new { @class = "form-control", @id = "duration", @type = "range", @min = "1", @max = "120", @step = "1", @value = Model.DurationInMinutes * 5 })
                 @Html.ValidationMessageFor(model => model.DurationInMinutes, "", new { @class = "text-danger" })
             </div>
         </div>
 
-
         @*<div class="form-group">
             @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DurationType", Model.DurationTypes, new { @mandatory = "mandatory", style = "max-width: 210px;" })
+                @Html.DropDownList("DurationType", Model.DurationTypes, new { @mandatory = "mandatory", @id = "durationTypeDropdown" })
 
                 @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
             </div>
         </div>*@
-
-
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="text" readonly="readonly" id="durationText" />
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -62,5 +69,92 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Details", "Relays", new { id = ViewData["relayparentid"] }, null)
+    @Html.ActionLink("Back to List", "Details", "Relays", new { id = Model.RelayId }, null)
 </div>
+<script>
+
+            function PopulateDuration() {
+
+
+                if ($('#duration').val() != null) {
+                    var minutesMultiplier = 5;
+                    //if ($('#durationTypeDropdown').val() == "2") {
+                    //    minutesMultiplier = 60;
+                    //}
+
+                    var totalminutes = $('#duration').val() * minutesMultiplier;
+                    if ($('#eventstart').val() != null && $('#eventstart').val() != "") {
+                        var endDate = new Date(moment($('#eventstart').val()).valueOf() + totalminutes * 60 * 1000);
+                        var endDatePretified = moment(endDate).format("MM/DD/YYYY hh:mm A")
+                        $('#eventend').val(endDatePretified);
+                    }
+                    else {
+                        $('#eventend').val(null);
+                    }
+                    $('#durationText').val("Total minutes: " + totalminutes.toString());
+                }
+                else {
+                    $('#durationText').val("Total minutes: ");
+                }
+            }
+
+            function OnDurationChanged() {
+
+                PopulateDuration();
+            }
+            function OnLoad() {
+
+                //if ($('#durationTypeDropdown').val() == "1") {
+
+                //    $('#duration').attr('max', 120);
+                //}
+                //else if ($('#durationTypeDropdown').val() == "2")
+                //{
+
+
+                    $('#duration').attr('max', 24);
+                    if ($('#duration').val() != null && $('#duration').val() > 24) {
+                        $('#duration').val(24);
+                    }
+                //}
+                OnDurationChanged();
+
+            }
+
+            $(function () {
+
+                $('#datetimepicker1').datetimepicker({
+
+                })
+                $('#datetimepicker1').on("dp.change", function (e) {
+                    OnDurationChanged();
+                });
+                $('#duration').on("change", function (e) {
+                    OnDurationChanged();
+                })
+                //$('#durationTypeDropdown').on("change", function (e) {
+
+                //    if ($(this).val() == "1") {
+
+                //        $('#duration').attr('max', 120);
+                //    }
+                //    else if ($(this).val() == "2") {
+
+
+                //        $('#duration').attr('max', 24);
+                //        if ($('#duration').val() != null && parseInt($('#duration').val()) > 24) {
+                //            $('#duration').val(24);
+                //        }
+                //    }
+                //    //if it is minutes
+                //    //max = 120
+                //    //else max = 24
+                //    //    alert('yo');
+                //    PopulateDuration();
+
+                //})
+
+                OnLoad();
+
+            });
+</script>
