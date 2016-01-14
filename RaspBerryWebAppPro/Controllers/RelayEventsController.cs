@@ -83,7 +83,7 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,RelayID,start,end,duration,DurationType")] RelayEvent relayEvent)
+        public ActionResult Edit([Bind(Include = "ID,RelayID,StartTime,EndTime,DurationInMinutes")] RelayEvent relayEvent)
         {
             if (ModelState.IsValid)
             {

@@ -82,7 +82,7 @@ namespace RaspBerryWebAppPro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,devicenumber,Name,IsSuccess")] Device device)
+        public ActionResult Edit([Bind(Include = "ID,SerialNumber,Name")] Device device)
         {
             if (ModelState.IsValid)
             {
