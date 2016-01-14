@@ -19,41 +19,41 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.start)
+            @Html.DisplayNameFor(model => model.StartTime)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.start)
+            @Html.DisplayFor(model => model.StartTime)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.end)
+            @Html.DisplayNameFor(model => model.EndTime)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.end)
+            @Html.DisplayFor(model => model.EndTime)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.duration)
+            @Html.DisplayNameFor(model => model.DurationInMinutes)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.duration)
+            @Html.DisplayFor(model => model.DurationInMinutes)
         </dd>
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.DurationType)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.DurationType)
-        </dd>
+        </dd>*@
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List of Events", "Details", "Relays", new { id = Model.RelayID }, null)
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List of Events", "Details", "Relays", new { id = Model.RelayId }, null)
 
 </p>
