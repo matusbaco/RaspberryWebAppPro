@@ -287,7 +287,8 @@
     <Content Include="Content\bootstrap\alerts.less" />
     <Content Include="Content\_bootstrap-datetimepicker.less" />
     <Content Include="Content\bootstrap-datetimepicker-build.less" />
-    <None Include="Properties\PublishProfiles\RaspBerryWebAppPro.pubxml" />
+    <None Include="Properties\PublishProfiles\RaspMustRun - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\RaspMustRun - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
